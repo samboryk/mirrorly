@@ -1,0 +1,32 @@
+const fs = require('fs');
+module.exports = ({ app, win, receiver }) => {
+  const shot = async name => { const img = await win.webContents.capturePage(); fs.writeFileSync(`/tmp/shots/${name}.png`, img.toPNG()); console.log('shot', name, img.getSize()); };
+  const js = code => win.webContents.executeJavaScript(code);
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  win.webContents.on('console-message', e => console.log('renderer:', e.message));
+  let audio = 0, frames = 0, keys = 0;
+  receiver.on('audio', p => { audio++; if (audio === 50) { let s = 0; for (const v of p) s += Math.abs(v); console.log('audio pkt50 samples', p.length, 'mean', (s / p.length).toFixed(0)); } });
+  receiver.on('video-frame', f => { frames++; if (f.key) keys++; });
+  (async () => {
+    await wait(1500);
+    const sender = require('./fake-sender');
+    const p = sender.run({ port: receiver.port, seconds: 5, log: m => console.log('sender:', m) });
+    await wait(1200);
+    await shot('5-approval');
+    await js("document.querySelector('#alert-allow').click()");
+    await wait(2500);
+    await js("document.getElementById('stream-view').dispatchEvent(new MouseEvent('mousemove'))");
+    await wait(500);
+    await shot('6-streaming');
+    const r = await p;
+    console.log('main: frames', frames, 'keys', keys, 'audio pkts', audio);
+    console.log('renderer:', await js("JSON.stringify({fps: document.getElementById('fps').textContent, has: document.body.className, cw: document.getElementById('screen').width, ch: document.getElementById('screen').height})"));
+    console.log('win bounds', JSON.stringify(win.getBounds()));
+    await js("document.body.classList.add('fullscreen')"); await wait(700); await shot('6b-fullscreen'); await js("document.body.classList.remove('fullscreen')");
+    await r.teardown();
+    await wait(1500);
+    await shot('7-after');
+    console.log('final body', await js('document.body.className'));
+    app.exit(0);
+  })().catch(e => { console.error('HOOK ERR', e); app.exit(1); });
+};

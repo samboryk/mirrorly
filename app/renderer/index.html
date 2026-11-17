@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; worker-src 'self' blob:; media-src 'self' blob:">
+<title>Mirrorly</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="idle">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-mirror" viewBox="0 0 24 24"><rect x="2.5" y="4" width="14" height="10.5" rx="2.4" fill="none" stroke="currentColor" stroke-width="1.7"/><rect x="7.5" y="9.5" width="14" height="10.5" rx="2.4" fill="currentColor" fill-opacity=".28" stroke="currentColor" stroke-width="1.7"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M10.3 3.2h3.4l.5 2.4c.6.2 1.2.5 1.7.9l2.3-.8 1.7 2.9-1.8 1.6c.1.6.1 1.3 0 1.9l1.8 1.6-1.7 2.9-2.3-.8c-.5.4-1.1.7-1.7.9l-.5 2.4h-3.4l-.5-2.4c-.6-.2-1.2-.5-1.7-.9l-2.3.8-1.7-2.9 1.8-1.6a6 6 0 0 1 0-1.9L4.1 8.6l1.7-2.9 2.3.8c.5-.4 1.1-.7 1.7-.9z"/><circle cx="12" cy="12" r="2.8" fill="none" stroke="currentColor" stroke-width="1.7"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3.5 8.5a2 2 0 0 1 2-2h2.2l1.4-2h5.8l1.4 2h2.2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/><circle cx="12" cy="13" r="3.6" fill="none" stroke="currentColor" stroke-width="1.7"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round" d="M9 3.5h6l-1 5.5 3.5 3.5h-11L10 9zM12 12.5v8"/></symbol>
+    <symbol id="i-speaker" viewBox="0 0 24 24"><path fill="currentColor" d="M4 9.5h3.2L12 5.2v13.6l-4.8-4.3H4z"/><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" d="M15.5 9a4.5 4.5 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11"/></symbol>
+    <symbol id="i-mute" viewBox="0 0 24 24"><path fill="currentColor" d="M4 9.5h3.2L12 5.2v13.6l-4.8-4.3H4z"/><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" d="M15.5 9.5l5 5M20.5 9.5l-5 5"/></symbol>
+    <symbol id="i-expand" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4.5 9.5v-5h5M19.5 9.5v-5h-5M4.5 14.5v5h5M19.5 14.5v5h-5"/></symbol>
+    <symbol id="i-shrink" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9.5 4.5v5h-5M14.5 4.5v5h5M9.5 19.5v-5h-5M14.5 19.5v-5h5"/></symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M7 7l10 10M17 7L7 17"/></symbol>
+    <symbol id="i-wifi" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M3.5 9.5a12 12 0 0 1 17 0M6.5 12.7a7.6 7.6 0 0 1 11 0M9.4 15.8a3.4 3.4 0 0 1 5.2 0"/><circle cx="12" cy="18.8" r="1.4" fill="currentColor"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6.5" y="2.5" width="11" height="19" rx="3" fill="none" stroke="currentColor" stroke-width="1.7"/><rect x="10" y="4.6" width="4" height="1.3" rx=".65" fill="currentColor"/></symbol>
+    <symbol id="i-controls" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7.5" height="7.5" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="13" y="3.5" width="7.5" height="7.5" rx="3.75" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="3.5" y="13" width="7.5" height="7.5" rx="3.75" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="13" y="13" width="7.5" height="7.5" rx="2.2" fill="currentColor" fill-opacity=".35" stroke="currentColor" stroke-width="1.6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M5.5 12.5l4.2 4.2 8.8-9.2"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.6" fill="none" stroke="currentColor" stroke-width="1.7"/><path fill="none" stroke="currentColor" stroke-width="1.7" d="M8.3 10.5V8a3.7 3.7 0 0 1 7.4 0v2.5"/></symbol>
+    <symbol id="i-min" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M7 12h10"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M7.5 7.5l9 9M16.5 7.5l-9 9"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" d="M3.5 12.2V4.5a1 1 0 0 1 1-1h7.7l8.3 8.3a1.4 1.4 0 0 1 0 2l-6.7 6.7a1.4 1.4 0 0 1-2 0z"/><circle cx="8" cy="8" r="1.6" fill="currentColor"/></symbol>
+    <symbol id="i-hd" viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M7 9v6M7 12h3.5M10.5 9v6M14 9v6h1.5a3 3 0 0 0 0-6z"/></symbol>
+    <symbol id="i-speed" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" d="M4.5 17a8 8 0 1 1 15 0"/><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M12 14l4-5"/><circle cx="12" cy="14" r="1.7" fill="currentColor"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" d="M12 3l7.5 3v5.5c0 4.6-3.2 8-7.5 9.5-4.3-1.5-7.5-4.9-7.5-9.5V6z"/><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" d="M8.8 12l2.3 2.3 4.2-4.6"/></symbol>
+    <symbol id="i-window" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="15" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path stroke="currentColor" stroke-width="1.8" d="M3 9h18"/></symbol>
+    <symbol id="i-fullscr" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" d="M4.5 9.5v-5h5M19.5 9.5v-5h-5M4.5 14.5v5h5M19.5 14.5v5h-5"/></symbol>
+    <symbol id="i-tray" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" d="M3.5 13.5l2.6-8h11.8l2.6 8v5a1 1 0 0 1-1 1h-15a1 1 0 0 1-1-1z"/><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" d="M3.5 13.5h5l1.2 2.3h4.6l1.2-2.3h5"/></symbol>
+    <symbol id="i-power" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 3.5v8M7.2 6.3a7.5 7.5 0 1 0 9.6 0"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" d="M12 4v12M6.5 10.5L12 16l5.5-5.5M5 20h14"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" d="M9 6.5h11M9 12h11M9 17.5h11"/><circle cx="4.5" cy="6.5" r="1.4" fill="currentColor"/><circle cx="4.5" cy="12" r="1.4" fill="currentColor"/><circle cx="4.5" cy="17.5" r="1.4" fill="currentColor"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path stroke="currentColor" stroke-width="2.1" stroke-linecap="round" d="M12 11v5.5"/><circle cx="12" cy="7.8" r="1.3" fill="currentColor"/></symbol>
+  </defs>
+</svg>
+
+<div id="wallpaper" aria-hidden="true"><i class="orb o1"></i><i class="orb o2"></i><i class="orb o3"></i><i class="orb o4"></i><div class="grain"></div></div>
+
+<header id="titlebar">
+  <div class="brand"><svg><use href="#i-mirror"/></svg><span>Mirrorly</span></div>
+  <div class="winbtns" id="winbtns">
+    <button class="wbtn" id="btn-min" title="Згорнути"><svg><use href="#i-min"/></svg></button>
+    <button class="wbtn" id="btn-close" title="Закрити"><svg><use href="#i-close"/></svg></button>
+  </div>
+</header>
+
+<!-- ============ IDLE / WAITING ============ -->
+<main id="idle-view">
+  <section class="hero">
+    <div class="radar" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="app-tile glass-lite"><svg><use href="#i-mirror"/></svg></div>
+    <h1 id="hero-title">Готово до повтору екрана</h1>
+    <p class="hero-sub">На iPhone оберіть <b class="name-chip" id="hero-name">…</b></p>
+  </section>
+
+  <button class="upd-banner" id="upd-banner" hidden>
+    <span class="upd-ico"><svg><use href="#i-arrow"/></svg></span>
+    <span class="upd-txt"><b id="upd-title">Доступне оновлення</b><span id="upd-sub">Натисніть, щоб встановити</span></span>
+    <span class="upd-go" id="upd-go">Оновити</span>
+  </button>
+
+  <section class="card glass-lite steps">
+    <div class="step">
+      <div class="step-ico"><svg><use href="#i-controls"/></svg></div>
+      <div class="step-txt"><b>Відкрийте Пункт керування</b><span>Проведіть донизу від правого верхнього кута екрана iPhone</span></div>
+    </div>
+    <div class="step">
+      <div class="step-ico"><svg><use href="#i-mirror"/></svg></div>
+      <div class="step-txt"><b>Торкніться «Повтор екрана»</b><span>Кнопка з двома прямокутниками</span></div>
+    </div>
+    <div class="step">
+      <div class="step-ico"><svg><use href="#i-phone"/></svg></div>
+      <div class="step-txt"><b>Виберіть «<span id="step-name">…</span>»</b><span>Зображення з’явиться в цьому вікні</span></div>
+    </div>
+  </section>
+
+  <section class="netline">
+    <span class="dot" id="net-dot"></span>
+    <svg class="wifi"><use href="#i-wifi"/></svg>
+    <span id="net-text">Перевірка мережі…</span>
+  </section>
+
+  <nav class="dock glass-lite">
+    <button class="dock-btn" id="open-settings"><svg><use href="#i-gear"/></svg><span>Налаштування</span></button>
+  </nav>
+</main>
+
+<!-- ============ STREAM ============ -->
+<main id="stream-view" aria-live="polite">
+  <canvas id="ambient" width="32" height="32"></canvas>
+  <canvas id="screen"></canvas>
+  <div id="edge"></div>
+  <div id="connecting" class="center-card glass">
+    <div class="spinner"></div>
+    <b id="connecting-name">iPhone</b>
+    <span>Підключення…</span>
+  </div>
+  <div id="paused" class="center-card glass">
+    <svg class="big"><use href="#i-lock"/></svg>
+    <b>Екран iPhone вимкнено</b>
+    <span>Розблокуйте телефон, щоб продовжити</span>
+  </div>
+  <div id="stream-top" class="hud">
+    <div class="pill glass"><span class="live-dot"></span><span id="stream-name">iPhone</span><span class="sep"></span><span id="fps">0 к/с</span><span class="sep res-sep"></span><span id="res"></span></div>
+  </div>
+  <div id="stream-controls" class="hud">
+    <div class="capsule glass">
+      <button class="cbtn" id="c-shot" title="Знімок екрана"><svg><use href="#i-camera"/></svg></button>
+      <button class="cbtn" id="c-pin" title="Поверх інших вікон"><svg><use href="#i-pin"/></svg></button>
+      <button class="cbtn" id="c-mute" title="Звук"><svg><use href="#i-speaker"/></svg></button>
+      <button class="cbtn" id="c-full" title="На весь екран"><svg><use href="#i-expand"/></svg></button>
+      <button class="cbtn danger" id="c-stop" title="Відключити"><svg><use href="#i-stop"/></svg><span>Відключити</span></button>
+    </div>
+  </div>
+</main>
+
+<!-- ============ SETTINGS SHEET ============ -->
+<div id="sheet-backdrop"></div>
+<section id="sheet" role="dialog" aria-label="Налаштування">
+  <div class="grabber"></div>
+  <header class="sheet-head">
+    <span></span>
+    <h2>Налаштування</h2>
+    <button class="text-btn" id="close-settings">Готово</button>
+  </header>
+  <div class="sheet-body">
+    <div class="profile glass-lite">
+      <div class="profile-ico"><svg><use href="#i-mirror"/></svg></div>
+      <div class="profile-txt"><b>Mirrorly</b><span id="s-version">Версія 1.0.0</span></div>
+    </div>
+
+    <h3>Пристрій</h3>
+    <div class="group">
+      <label class="row">
+        <span class="ri" style="--c:#0a84ff"><svg><use href="#i-tag"/></svg></span>
+        <span class="row-label">Назва на iPhone</span>
+        <input id="s-name" type="text" maxlength="40" spellcheck="false" autocomplete="off">
+      </label>
+    </div>
+    <p class="foot">Так комп’ютер відображатиметься у списку «Повтор екрана».</p>
+
+    <h3>Зображення і звук</h3>
+    <div class="group">
+      <div class="row col">
+        <div class="row-top"><span class="ri" style="--c:#5e5ce6"><svg><use href="#i-hd"/></svg></span><span class="row-label">Якість</span></div>
+        <div class="segmented" id="s-quality">
+          <button data-v="720">720p</button><button data-v="1080">1080p</button><button data-v="1440">1440p</button>
+          <i class="seg-thumb"></i>
+        </div>
+      </div>
+      <div class="row col">
+        <div class="row-top"><span class="ri" style="--c:#ff9f0a"><svg><use href="#i-speed"/></svg></span><span class="row-label">Частота кадрів</span></div>
+        <div class="segmented" id="s-fps">
+          <button data-v="30">30 к/с</button><button data-v="60">60 к/с</button>
+          <i class="seg-thumb"></i>
+        </div>
+      </div>
+      <div class="row"><span class="ri" style="--c:#ff375f"><svg><use href="#i-speaker"/></svg></span><span class="row-label">Звук з iPhone</span><button class="switch" data-key="audio" role="switch"></button></div>
+    </div>
+    <p class="foot">Якість і частота кадрів застосовуються з наступного підключення.</p>
+
+    <h3>Безпека</h3>
+    <div class="group">
+      <div class="row"><span class="ri" style="--c:#30d158"><svg><use href="#i-shield"/></svg></span><span class="row-label">Запитувати дозвіл</span><button class="switch" data-key="askPermission" role="switch"></button></div>
+      <div id="trusted-list"></div>
+    </div>
+    <p class="foot">Новий пристрій зможе показати екран лише після вашого дозволу.</p>
+
+    <h3>Вікно</h3>
+    <div class="group">
+      <div class="row"><span class="ri" style="--c:#64d2ff"><svg><use href="#i-pin"/></svg></span><span class="row-label">Поверх інших вікон</span><button class="switch" data-key="alwaysOnTop" role="switch"></button></div>
+      <div class="row"><span class="ri" style="--c:#bf5af2"><svg><use href="#i-fullscr"/></svg></span><span class="row-label">Відкривати на весь екран</span><button class="switch" data-key="autoFullscreen" role="switch"></button></div>
+      <div class="row"><span class="ri" style="--c:#8e8e93"><svg><use href="#i-tray"/></svg></span><span class="row-label">Згортати в трей</span><button class="switch" data-key="closeToTray" role="switch"></button></div>
+      <div class="row win-only"><span class="ri" style="--c:#34c759"><svg><use href="#i-power"/></svg></span><span class="row-label">Запуск з Windows</span><button class="switch" data-key="launchAtLogin" role="switch"></button></div>
+    </div>
+
+    <h3>Оновлення</h3>
+    <div class="group">
+      <div class="row"><span class="ri" style="--c:#0a84ff"><svg><use href="#i-arrow"/></svg></span><span class="row-label">Автоматичні оновлення</span><button class="switch" data-key="autoUpdate" role="switch"></button></div>
+      <div class="row upd-row">
+        <span class="ri" style="--c:#5ac8fa"><svg><use href="#i-info"/></svg></span>
+        <span class="row-label"><span id="u-status">Стан оновлень</span><span class="progress" id="u-progress"><i></i></span></span>
+        <button class="pill-btn" id="u-action">Перевірити</button>
+      </div>
+    </div>
+    <p class="foot" id="u-foot">Нові версії завантажуються у фоні й встановлюються одним натисканням.</p>
+
+    <h3>Довідка</h3>
+    <div class="group">
+      <button class="row link" id="s-log"><span class="ri" style="--c:#636366"><svg><use href="#i-list"/></svg></span><span class="row-label">Журнал подій</span><span class="chev">›</span></button>
+    </div>
+    <p class="foot">Якщо комп’ютера немає у списку на iPhone: обидва пристрої мають бути в одній мережі Wi‑Fi, а Брандмауер Windows має дозволяти Mirrorly доступ до мережі.</p>
+    <div id="log-box" class="group logbox"></div>
+  </div>
+</section>
+
+<!-- ============ ALERT ============ -->
+<div id="alert-backdrop">
+  <div class="alert glass">
+    <div class="alert-ico"><svg><use href="#i-phone"/></svg></div>
+    <h4>Дозволити повтор екрана?</h4>
+    <p><b id="alert-name">iPhone</b> хоче показати свій екран на цьому комп’ютері.</p>
+    <label class="remember"><span>Запам’ятати пристрій</span><button class="switch small" id="alert-remember" role="switch"></button></label>
+    <div class="alert-btns">
+      <button class="cap gray" id="alert-deny">Відхилити</button>
+      <button class="cap blue" id="alert-allow">Дозволити</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ISLAND TOAST ============ -->
+<div id="island"><svg id="island-ico"><use href="#i-check"/></svg><span id="island-text"></span></div>
+
+<script src="app.js"></script>
+</body>
+</html>
