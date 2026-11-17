@@ -7,7 +7,7 @@ module.exports = ({ app, win }) => {
   const orig = win.webContents.send.bind(win.webContents);
   win.webContents.send = (ch, d) => { if (ch === 'update' && states[states.length - 1] !== d.status) states.push(d.status); return orig(ch, d); };
   (async () => {
-    await wait(9000);
+    await wait(+(process.env.WAIT || 9000));
     console.log('STATES', states.join(' > '));
     console.log('UI status:', await js("document.getElementById('u-status').textContent"), '| banner hidden:', await js("document.getElementById('upd-banner').hidden"), '| btn:', await js("document.getElementById('u-action').textContent"));
     if (process.env.SHOTS) {

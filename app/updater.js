@@ -57,7 +57,13 @@ class Updater extends EventEmitter {
     this.busy = true;
     this.set({ status: 'checking', error: null, manual });
     try {
-      const rel = await this.getJson(API);
+      let rel;
+      try {
+        rel = await this.getJson(API);
+      } catch (e) {
+        if (/не опубліковано/.test(e.message)) throw e;
+        rel = await this.fromWebsite(); // API limit (e.g. many PCs behind one IP) — use the release page instead
+      }
       if (rel.draft || rel.prerelease) throw new Error('Оновлень ще не опубліковано');
       const asset = (rel.assets || []).find(a => ASSET_RE.test(a.name));
       const version = (rel.tag_name || '').replace(/^v/i, '') || (asset && ASSET_RE.exec(asset.name)[1]);
@@ -81,6 +87,17 @@ class Updater extends EventEmitter {
     }
     if (autoDownload) await this.download();
     return this.state;
+  }
+
+  /** Fallback without the REST API: newest tag from the releases feed + the published .sha256 file. */
+  async fromWebsite() {
+    const feed = await this.getText(`https://github.com/${REPO}/releases.atom`);
+    const m = /\/releases\/tag\/v?(\d+\.\d+\.\d+)/.exec(feed);
+    if (!m) throw new Error('Не вдалося перевірити оновлення');
+    const v = m[1];
+    const name = `Mirrorly-Setup-${v}.exe`;
+    const url = `https://github.com/${REPO}/releases/download/v${v}/${name}`;
+    return { tag_name: 'v' + v, body: '', assets: [{ name, browser_download_url: url, size: 0 }, { name: name + '.sha256', browser_download_url: url + '.sha256' }] };
   }
 
   async download() {

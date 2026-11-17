@@ -7,6 +7,7 @@ module.exports = (mode) => new Promise(res => {
     const base = `http://127.0.0.1:${srv.address().port}`;
     if (req.url === '/latest') {
       if (mode === 'none') { r.writeHead(404); return r.end('{}'); }
+      if (mode === 'ratelimit') { r.writeHead(403); return r.end('{}'); }
       const ver = mode === 'same' ? '1.1.0' : '1.2.0';
       r.writeHead(200, { 'content-type': 'application/json' });
       return r.end(JSON.stringify({ tag_name: 'v' + ver, body: 'Нове', assets: [
