@@ -132,33 +132,31 @@ const canvas = $('#screen');
 const ctx2d = canvas.getContext('2d', { alpha: false, desynchronized: true });
 let decoder = null;
 let videoCfg = null;
-let needKey = true;
+let swFallback = false;      // switch to the software decoder after a hardware decoder error
+let gop = [];                // frames since the last key frame — replayed whenever the decoder (re)starts
 let pendingFrame = null;
 let rafQueued = false;
-let frameCounter = 0;
 let fpsCount = 0;
 let lastFitKey = '';
 let chunkTs = 0;
-let ambientTick = 0;
-const ambCtx = $('#ambient').getContext('2d', { alpha: false });
 
 function resetDecoder() {
   if (decoder) { try { decoder.close(); } catch (_) { /* closed */ } }
   decoder = null;
-  needKey = true;
 }
 
-async function configureDecoder(cfg) {
+async function configureDecoder(cfg, keepGop = false) {
   resetDecoder();
+  if (!keepGop) gop = [];
   videoCfg = cfg;
   const base = { codec: cfg.codec, description: cfg.avcc, optimizeForLatency: true };
-  let config = { ...base, hardwareAcceleration: 'prefer-hardware' };
+  let config = { ...base, hardwareAcceleration: swFallback ? 'prefer-software' : 'prefer-hardware' };
   try {
     const sup = await VideoDecoder.isConfigSupported(config);
     if (!sup.supported) config = { ...base, hardwareAcceleration: 'no-preference' };
   } catch (_) { config = { ...base }; }
   if (videoCfg !== cfg) return; // superseded meanwhile
-  decoder = new VideoDecoder({
+  const dec = new VideoDecoder({
     output: frame => {
       if (pendingFrame) pendingFrame.close();
       pendingFrame = frame;
@@ -166,11 +164,15 @@ async function configureDecoder(cfg) {
     },
     error: e => {
       console.warn('decoder error', e);
-      // Recreate on the next config/key frame.
-      const c = videoCfg; resetDecoder(); if (c) configureDecoder(c);
+      if (dec !== decoder) return;
+      // Retry right away with the software decoder, replaying the current group of frames.
+      swFallback = true;
+      const c = videoCfg; resetDecoder(); if (c) configureDecoder(c, true);
     },
   });
-  try { decoder.configure(config); } catch (e) { console.warn(e); island('Не вдалося запустити декодер відео', { warn: true }); }
+  try { dec.configure(config); } catch (e) { console.warn(e); island('Не вдалося запустити декодер відео', { warn: true }); return; }
+  decoder = dec;
+  for (const f of gop) feed(f); // frames that arrived while the decoder was starting
 }
 
 function draw() {
@@ -182,7 +184,6 @@ function draw() {
   const w = f.displayWidth, h = f.displayHeight;
   if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
   ctx2d.drawImage(f, 0, 0, w, h);
-  if (body.classList.contains('fullscreen') && (ambientTick++ % 20 === 0)) ambCtx.drawImage(f, 0, 0, 32, 32);
   f.close();
   fpsCount++;
   if (!body.classList.contains('has-video')) { body.classList.add('has-video'); showHud(); }
@@ -192,17 +193,18 @@ function draw() {
 
 setInterval(() => { $('#fps').textContent = `${fpsCount} к/с`; fpsCount = 0; }, 1000);
 
-function onVideoFrame(f) {
-  if (!decoder || decoder.state !== 'configured') return;
-  if (needKey && !f.key) return;
-  // If the decoder falls behind (slow PC), skip ahead to the next key frame.
-  if (decoder.decodeQueueSize > 12 && !f.key) { needKey = true; return; }
-  needKey = false;
+function feed(f) {
   chunkTs += 16667;
   try {
     decoder.decode(new EncodedVideoChunk({ type: f.key ? 'key' : 'delta', timestamp: chunkTs, data: f.data }));
-    frameCounter++;
-  } catch (e) { console.warn(e); needKey = true; }
+  } catch (e) { console.warn(e); }
+}
+
+function onVideoFrame(f) {
+  if (f.key) gop = [];
+  else if (!gop.length) return;           // no key frame yet — nothing to decode against
+  if (gop.length < 1200) gop.push(f);      // keep the group so a decoder restart never waits for the next key frame
+  if (decoder && decoder.state === 'configured') feed(f);
 }
 
 // ======================= audio =======================
@@ -299,6 +301,8 @@ api.on('session-start', info => {
 api.on('session-end', info => {
   resetDecoder();
   videoCfg = null;
+  gop = [];
+  swFallback = false;
   if (pendingFrame) { pendingFrame.close(); pendingFrame = null; }
   body.classList.remove('streaming', 'has-video', 'paused', 'hud-on', 'hud-off');
   body.classList.add('idle');

@@ -20,7 +20,7 @@
 ```bash
 cd app && npm install            # залежності програми
 cd ../build && npm install && node build.js
-makensis -DVERSION=1.1.1 -DINSTALLED_KB=$(du -sk dist/Mirrorly | cut -f1) installer.nsi
+makensis -DVERSION=1.1.2 -DINSTALLED_KB=$(du -sk dist/Mirrorly | cut -f1) installer.nsi
 ```
 
 `build.js` очікує Electron для Windows x64 у `ELECTRON_ZIP` (за замовчуванням `/tmp/electron-win.zip`).
