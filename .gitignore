@@ -1,0 +1,5 @@
+node_modules/
+build/dist/
+build/stage/
+test/*.h264
+test/*.bin
